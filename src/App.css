@@ -1,0 +1,28 @@
+.app {
+    margin: 1rem;
+}
+
+.editor {
+    width: 45%;
+    height: 800px;
+    float: left;
+}
+
+.viewer, .error {
+    padding-left: 5%;
+    width: 45%;
+    height: 100px;
+    float: left;
+}
+
+.error {
+    margin-left: 1rem;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    color: red;
+    border: 1px solid red;
+}
+
+.theme-default-content:not(.custom) {
+    max-width: 100%;
+}
