@@ -3,6 +3,9 @@ import './App.css';
 
 import { LiveError, LivePreview, LiveProvider } from 'react-live';
 import MonacoEditor from 'react-monaco-editor';
+import components from '@ionic/core/dist/types/components.d.ts';
+import interfaces from '@ionic/core/dist/types/interface.d.ts';
+import stencilCore from '@ionic/core/dist/types/stencil.core.d.ts';
 
 const SCRIPTS = [
   {
@@ -16,6 +19,11 @@ const STYLES = [
     rel: 'stylesheet',
   },
 ];
+const FILES = {
+  '@types/components.d.ts': components,
+  '@types/interface.d.ts': interfaces,
+  '@types/stencil.core.d.ts': stencilCore,
+};
 
 const DEFAULT_CONTENT = `<div>
   <h1>Sample code</h1>
@@ -51,6 +59,50 @@ export default class App extends React.Component {
       contextMenuOrder: .2,
       run: this.runSave.bind(this),
     });
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      allowNonTsExtensions: true,
+      allowSyntheticDefaultImports: true,
+      experimentalDecorators: true,
+      jsx: monaco.languages.typescript.JsxEmit.React,
+      jsxFactory: 'h',
+      // jsxFactory: 'React.createElement',
+      lib: ['dom', 'es2019'],
+      module: monaco.languages.typescript.ModuleKind.ESNext,
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      // noEmit: true,
+      // noUnusedLocals: true,
+      // noUnusedParameters: true,
+      target: monaco.languages.typescript.ScriptTarget.ES2019,
+      typeRoots: ['inmemory://model/node_modules/@types'],
+    });
+    for (const fileName in FILES) {
+      if (FILES.hasOwnProperty(fileName)) {
+        const fakePath = `inmemory://model/node_modules/${fileName}`;
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(
+            FILES[fileName],
+            fakePath,
+        );
+        monaco.languages.typescript.javascriptDefaults.addExtraLib(
+            FILES[fileName],
+            fakePath,
+        );
+      }
+    }
+    // const suggestions = [
+    //   {
+    //     label: 'ion-button',
+    //     kind: monaco.languages.CompletionItemKind.Property,
+    //     documentation: 'The ion-button',
+    //     insertText: 'ion-button',
+    //   },
+    // ];
+    // monaco.languages.registerCompletionItemProvider('html', {
+    //   provideCompletionItems(model, position) {
+    //     return {
+    //       suggestions,
+    //     };
+    //   },
+    // });
   }
 
   runSave() {
@@ -104,7 +156,7 @@ export default class App extends React.Component {
     return (
         <div className="app">
           <p>
-            {!this.isUnsaved && <a href={this.generatedLink} target="_blank" rel="noopener noreferrer">Example link</a>}
+            {!this.isUnsaved && <a href={this.generatedLink} target="_blank" rel="noopener noreferrer">Share link</a>}
             {this.isUnsaved && <button onClick={this.runSave.bind(this)}>Save</button>}
           </p>
           <LiveProvider code={savedCode}>
