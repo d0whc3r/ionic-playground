@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://d0whc3r.github.io/ionic-playground/",
   "dependencies": {
-    "monaco-editor": "0.18.1",
+    "monaco-editor": "0.47.0",
     "react": "16.10.1",
     "react-dom": "16.10.1",
     "react-live": "2.2.0",
